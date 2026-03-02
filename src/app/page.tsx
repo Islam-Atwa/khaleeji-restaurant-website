@@ -6,7 +6,8 @@ import { Button } from "@/components/ui/button";
 import { DISHES } from "@/data/dishes";
 import { TestimonialsSection } from "@/components/TestimonialsSection";
 import { StatsSection } from "@/components/StatsSection";
-
+import { ScrollReveal, StaggerContainer, StaggerItem } from "@/components/ScrollReveal";
+import { HeroContent } from "@/components/HeroContent";
 
 
 const EXPERIENCE_FEATURES = [
@@ -62,30 +63,8 @@ export default function HomePage() {
         {/* Ambient glow */}
         <div className="absolute top-1/3 left-1/2 -translate-x-1/2 h-[400px] w-[600px] rounded-full bg-primary/10 blur-[120px]" />
 
-        <div className="container relative z-10 mx-auto px-4 text-center">
-          <span className="mb-6 inline-block rounded-full border border-primary/30 bg-primary/10 px-5 py-1.5 text-sm text-primary">
-            مطعم خليجي فاخر
-          </span>
-          <h1 className="mb-6 font-heading text-5xl font-bold leading-tight text-white md:text-7xl">
-            مذاق الفخامة <br />
-            <span className="text-primary neon-glow">الخليجية الأصيلة</span>
-          </h1>
-          <p className="mx-auto mb-10 max-w-2xl text-lg text-muted-foreground md:text-xl">
-            نقدم لكم تجربة طعام استثنائية تمزج بين عراقة الماضي وإبداع الحاضر في أجواء راقية
-          </p>
-          <div className="flex flex-wrap items-center justify-center gap-4">
-            <Link href="#featured">
-              <Button size="lg" className="neon-glow rounded-full px-8 py-6 text-lg">
-                استعرض المنيو
-              </Button>
-            </Link>
-            <Link href="/contact">
-              <Button size="lg" variant="outline" className="rounded-full border-white/20 px-8 py-6 text-lg text-white hover:bg-white/10 hover:text-white">
-                احجز طاولتك الآن
-              </Button>
-            </Link>
-          </div>
-        </div>
+        {/* Hero content animates on mount (client component) */}
+        <HeroContent />
       </section>
 
       {/* ── Stats (animated count-up) ── */}
@@ -93,54 +72,55 @@ export default function HomePage() {
 
       {/* ── Experience Section ── */}
       <section id="experience" className="container mx-auto px-4 py-24">
-        <div className="mb-16 text-center">
+        <ScrollReveal className="mb-16 text-center">
           <h2 className="mb-4 font-heading text-4xl font-bold text-white">لماذا تختارنا؟</h2>
           <p className="mx-auto max-w-xl text-muted-foreground">
             نحن لا نقدم مجرد طعام — نصنع لكم ذكريات وتجارب تبقى في الوجدان
           </p>
-        </div>
+        </ScrollReveal>
 
-        <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-4">
+        <StaggerContainer className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-4">
           {EXPERIENCE_FEATURES.map((feat) => (
-            <div
-              key={feat.title}
-              className="group rounded-[24px] border border-white/10 bg-card p-8 transition-all duration-300 hover:border-primary/40 hover:scale-[1.02]"
-            >
-              <div className="mb-5 flex h-14 w-14 items-center justify-center rounded-full bg-primary/10 text-primary neon-glow transition-transform duration-300 group-hover:scale-110">
-                {feat.icon}
+            <StaggerItem key={feat.title}>
+              <div className="group rounded-[24px] border border-white/10 bg-card p-8 transition-all duration-300 hover:border-primary/40 hover:scale-[1.02] h-full">
+                <div className="mb-5 flex h-14 w-14 items-center justify-center rounded-full bg-primary/10 text-primary neon-glow transition-transform duration-300 group-hover:scale-110">
+                  {feat.icon}
+                </div>
+                <h3 className="mb-3 font-heading text-xl font-bold text-white">{feat.title}</h3>
+                <p className="text-sm leading-relaxed text-muted-foreground">{feat.description}</p>
               </div>
-              <h3 className="mb-3 font-heading text-xl font-bold text-white">{feat.title}</h3>
-              <p className="text-sm leading-relaxed text-muted-foreground">{feat.description}</p>
-            </div>
+            </StaggerItem>
           ))}
-        </div>
+        </StaggerContainer>
       </section>
 
       {/* ── Featured Dishes ── */}
       <section id="featured" className="container mx-auto px-4 py-24">
-        <div className="mb-16 text-center">
+        <ScrollReveal className="mb-16 text-center">
           <h2 className="mb-4 font-heading text-4xl font-bold text-white">الأطباق المميزة</h2>
           <p className="text-muted-foreground">تشكيلة مختارة بعناية لتلبي ذائقتكم الرفيعة</p>
-        </div>
+        </ScrollReveal>
 
-        <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
+        <StaggerContainer className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
           {DISHES.map((dish) => (
-            <FoodCard key={dish.id} {...dish} />
+            <StaggerItem key={dish.id}>
+              <FoodCard {...dish} />
+            </StaggerItem>
           ))}
-        </div>
+        </StaggerContainer>
       </section>
 
       {/* ── Location Section ── */}
       <section id="location" className="container mx-auto px-4 py-24">
-        <div className="mb-16 text-center">
+        <ScrollReveal className="mb-16 text-center">
           <h2 className="mb-4 font-heading text-4xl font-bold text-white">موقعنا</h2>
           <p className="text-muted-foreground">يسعدنا استقبالكم في قلب الرياض</p>
-        </div>
+        </ScrollReveal>
 
         <div className="overflow-hidden rounded-[32px] border border-white/10">
           <div className="grid grid-cols-1 lg:grid-cols-2">
-            {/* Map embed */}
-            <div className="relative h-[400px] lg:h-auto">
+            {/* Map embed – slides in from left */}
+            <ScrollReveal direction="right" className="relative h-[400px] lg:h-auto">
               <iframe
                 title="Restaurant Location"
                 src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3624.4736769986636!2d46.67321!3d24.68901!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3e2f03890d489399%3A0xbc9c4e03bb70de2d!2sTahlia%20St%2C%20Riyadh!5e0!3m2!1sen!2ssa!4v1700000000000"
@@ -149,10 +129,10 @@ export default function HomePage() {
                 loading="lazy"
                 referrerPolicy="no-referrer-when-downgrade"
               />
-            </div>
+            </ScrollReveal>
 
-            {/* Info panel */}
-            <div className="glass-panel flex flex-col justify-center gap-8 p-10 lg:p-14">
+            {/* Info panel – slides in from right */}
+            <ScrollReveal direction="left" delay={0.15} className="glass-panel flex flex-col justify-center gap-8 p-10 lg:p-14">
               <h3 className="font-heading text-3xl font-bold text-white">زوروا مطعمنا</h3>
 
               <div className="space-y-6">
@@ -199,7 +179,7 @@ export default function HomePage() {
                   احجز طاولتك الآن
                 </Button>
               </Link>
-            </div>
+            </ScrollReveal>
           </div>
         </div>
       </section>

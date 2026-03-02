@@ -1,3 +1,8 @@
+"use client";
+
+import { useRef } from "react";
+import { motion, useInView } from "framer-motion";
+
 const TESTIMONIALS = [
     {
         id: 1,
@@ -33,6 +38,8 @@ const TESTIMONIALS = [
     },
 ];
 
+const ease = [0.21, 0.47, 0.32, 0.98] as const;
+
 function StarRating({ count }: { count: number }) {
     return (
         <div className="flex gap-1">
@@ -46,19 +53,49 @@ function StarRating({ count }: { count: number }) {
 }
 
 export function TestimonialsSection() {
+    const ref = useRef<HTMLElement>(null);
+    const inView = useInView(ref, { once: true, amount: 0.1 });
+
+    const containerVariants = {
+        hidden: {},
+        visible: {
+            transition: { staggerChildren: 0.12, delayChildren: 0.05 },
+        },
+    };
+
+    const cardVariants = {
+        hidden: { opacity: 0, y: 40 },
+        visible: {
+            opacity: 1,
+            y: 0,
+            transition: { duration: 0.6, ease },
+        },
+    };
+
     return (
-        <section id="testimonials" className="container mx-auto px-4 py-24">
-            <div className="mb-16 text-center">
+        <section ref={ref} id="testimonials" className="container mx-auto px-4 py-24">
+            <motion.div
+                initial={{ opacity: 0, y: 30 }}
+                animate={inView ? { opacity: 1, y: 0 } : { opacity: 0, y: 30 }}
+                transition={{ duration: 0.65, ease }}
+                className="mb-16 text-center"
+            >
                 <h2 className="mb-4 font-heading text-4xl font-bold text-white">آراء ضيوفنا</h2>
                 <p className="mx-auto max-w-xl text-muted-foreground">
                     رضا ضيوفنا هو أعظم جائزة نسعى إليها في كل يوم
                 </p>
-            </div>
+            </motion.div>
 
-            <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4">
+            <motion.div
+                variants={containerVariants}
+                initial="hidden"
+                animate={inView ? "visible" : "hidden"}
+                className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4"
+            >
                 {TESTIMONIALS.map((t) => (
-                    <div
+                    <motion.div
                         key={t.id}
+                        variants={cardVariants}
                         className="group flex flex-col gap-5 rounded-[24px] border border-white/10 bg-card p-8 transition-all duration-300 hover:border-primary/40 hover:scale-[1.02]"
                     >
                         {/* Stars */}
@@ -79,9 +116,9 @@ export function TestimonialsSection() {
                                 <p className="text-xs text-muted-foreground">{t.role}</p>
                             </div>
                         </div>
-                    </div>
+                    </motion.div>
                 ))}
-            </div>
+            </motion.div>
         </section>
     );
 }

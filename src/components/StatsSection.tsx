@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { motion, useInView } from "framer-motion";
 
 interface Stat {
     end: number;
@@ -24,7 +25,6 @@ function useCountUp(end: number, duration = 1800, started: boolean) {
         const step = (timestamp: number) => {
             if (!startTime) startTime = timestamp;
             const progress = Math.min((timestamp - startTime) / duration, 1);
-            // ease-out cubic
             const eased = 1 - Math.pow(1 - progress, 3);
             setCount(Math.floor(eased * end));
             if (progress < 1) requestAnimationFrame(step);
@@ -50,29 +50,21 @@ function StatCard({ stat, started }: { stat: Stat; started: boolean }) {
 
 export function StatsSection() {
     const ref = useRef<HTMLElement>(null);
-    const [started, setStarted] = useState(false);
-
-    useEffect(() => {
-        const observer = new IntersectionObserver(
-            ([entry]) => {
-                if (entry.isIntersecting) {
-                    setStarted(true);
-                    observer.disconnect();
-                }
-            },
-            { threshold: 0.3 }
-        );
-        if (ref.current) observer.observe(ref.current);
-        return () => observer.disconnect();
-    }, []);
+    const inView = useInView(ref, { once: true, amount: 0.3 });
 
     return (
-        <section ref={ref} className="container mx-auto px-4 py-16">
+        <motion.section
+            ref={ref}
+            initial={{ opacity: 0, y: 40 }}
+            animate={inView ? { opacity: 1, y: 0 } : { opacity: 0, y: 40 }}
+            transition={{ duration: 0.7, ease: [0.21, 0.47, 0.32, 0.98] }}
+            className="container mx-auto px-4 py-16"
+        >
             <div className="glass-panel grid grid-cols-2 divide-x divide-x-reverse divide-white/10 rounded-[32px] border border-white/10 md:grid-cols-4">
                 {STATS.map((stat) => (
-                    <StatCard key={stat.label} stat={stat} started={started} />
+                    <StatCard key={stat.label} stat={stat} started={inView} />
                 ))}
             </div>
-        </section>
+        </motion.section>
     );
 }
